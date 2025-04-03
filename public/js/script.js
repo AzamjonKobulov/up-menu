@@ -16,37 +16,34 @@ mobileMenu.querySelectorAll("a").forEach((link) => {
 
 document.addEventListener("DOMContentLoaded", function () {
   const header = document.querySelector("header");
+  let lastScrollY = window.scrollY;
+  let isHeaderHidden = false;
 
   window.addEventListener("scroll", function () {
-    if (window.scrollY > 50) {
-      // Header adjustments
-      header.classList.add("bg-white", "py-5", "shadow-md");
-      header.classList.remove(
-        "md:bg-brand-orange-100",
-        "py-8",
-        "md:pt-10",
-        "lg:pt-14",
-        "md:pb-10"
-      );
+    const currentScrollY = window.scrollY;
 
-      // Mobile menu adjustments
-      mobileMenu.classList.add("pt-5");
-      mobileMenu.classList.remove("pt-8");
+    // Add "shadow" and "py-5" classes when scrollY > 200px
+    if (currentScrollY > 200) {
+      header.classList.add("shadow", "py-5");
     } else {
-      // Header adjustments
-      header.classList.remove("bg-white", "py-5", "shadow-md");
-      header.classList.add(
-        "md:bg-brand-orange-100",
-        "py-8",
-        "md:pt-10",
-        "lg:pt-14",
-        "md:pb-10"
-      );
-
-      // Mobile menu adjustments
-      mobileMenu.classList.remove("pt-5");
-      mobileMenu.classList.add("pt-8");
+      header.classList.remove("shadow", "py-5");
     }
+
+    if (currentScrollY > lastScrollY && currentScrollY > 50) {
+      // Scrolling down - hide header
+      if (!isHeaderHidden) {
+        header.style.transform = "translateY(-100%)";
+        isHeaderHidden = true;
+      }
+    } else {
+      // Scrolling up - show header
+      if (isHeaderHidden) {
+        header.style.transform = "translateY(0)";
+        isHeaderHidden = false;
+      }
+    }
+
+    lastScrollY = currentScrollY;
   });
 });
 
@@ -146,4 +143,11 @@ document.addEventListener("DOMContentLoaded", () => {
       icon.style.transform = "rotate(0deg)";
     }
   });
+});
+
+const reqForm = document.querySelector("#request-form");
+const reqFormToggle = document.querySelectorAll(".request-form-toggle");
+
+reqFormToggle.forEach((btn) => {
+  btn.addEventListener("click", () => reqForm.classList.toggle("hidden"));
 });
